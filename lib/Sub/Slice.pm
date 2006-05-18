@@ -2,9 +2,9 @@
 ## Name:        Sub::Slice
 ## Purpose:     Split long-running tasks into manageable chunks
 ## Author:      Simon Flack
-## Modified by: $Author: simonf $ on $Date: 2005/01/12 16:51:18 $
+## Modified by: $Author: colinr $ on $Date: 2005/11/23 14:31:51 $
 ## Created:     23/01/2003
-## RCS-ID:      $Id: Slice.pm,v 1.47 2005/01/12 16:51:18 simonf Exp $
+## RCS-ID:      $Id: Slice.pm,v 1.48 2005/11/23 14:31:51 colinr Exp $
 #############################################################################
 package Sub::Slice;
 
@@ -12,7 +12,7 @@ use strict;
 use vars qw/ $VERSION /;
 use Carp;
 
-$VERSION = sprintf"%d.%03d", q$Revision: 1.47 $ =~ /: (\d+)\.(\d+)/;
+$VERSION = sprintf"%d.%03d", q$Revision: 1.48 $ =~ /: (\d+)\.(\d+)/;
 
 sub new {
 	my $class = shift;
@@ -200,6 +200,7 @@ sub next_stage {
 	my $stage = shift;
 	croak("Error: invalid stage") if (ref $stage || !defined $stage);
 	$self->{'stage'} = $stage;
+	$self->{'token'}->{'stage'} = $stage;
 }
 
 sub at_start ($&) {
@@ -320,6 +321,7 @@ sub new {
 		done => 0,
 		abort => "",
 		error => "",
+		stage => "",
 		pin => $class->random_pin($pin_length),
 	}, $class;
 	return $self;
@@ -566,6 +568,10 @@ iterations proceed.
 
 Read-only.  Status message.
 
+=item stage
+
+Read-only.  The next stage that the job will run.
+
 =item iterations
 
 A write-only property the client can use to 
@@ -693,7 +699,7 @@ Allows large lumps of data to be stored efficiently by the back end.
 
 =head1 VERSION
 
-	$Revision: 1.47 $ on $Date: 2005/01/12 16:51:18 $ by $Author: simonf $
+	$Revision: 1.48 $ on $Date: 2005/11/23 14:31:51 $ by $Author: colinr $
 
 =head1 AUTHOR
 

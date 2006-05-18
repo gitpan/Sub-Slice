@@ -4,7 +4,7 @@
 # Purpose : Unit test for Sub::Slice
 # Author  : Simon Flack, John Alden and Tim Sweetman
 # Created : Jan 2003
-# CVS     : $Header: /home/cvs/software/cvsroot/sub_slice/t/slice.t,v 1.17 2005/01/12 16:51:19 simonf Exp $
+# CVS     : $Header: /home/cvs/software/cvsroot/sub_slice/t/slice.t,v 1.18 2005/11/23 14:31:51 colinr Exp $
 ###############################################################################
 # -t : trace
 # -T : deep trace
@@ -19,7 +19,7 @@ use File::Path;
 
 $|++;
 use lib './lib', '../lib';
-plan tests => 57;
+plan tests => 63;
 
 my $path = 'test_output';
 my %default_options = (storage_options => { path => $path });
@@ -54,6 +54,7 @@ for (1 .. 30) {
 	}
 	ASSERT( real_token($token)  && $total && $total ne $last_total,
 			'running slice #' . $token->count );
+	ASSERT($token->stage() =~ m/^(first_stage|second_stage|final)$/,"token has next_stage property");
 	$last_total = $total;
 	last if $token->done;
 }
